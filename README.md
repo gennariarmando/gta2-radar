@@ -1,5 +1,6 @@
 # GTA2 Radar From GTA3
-This is a straight port of the Radar Map from GTA3 to GTA2.
+This is a backport of GTA3's radar mini map to GTA2, made thanks to re3 project.
+Some changes have been made in order to make it work correctly in GTA2 but the base code is still the same.
 
 ## Features:
  - Full Map for each districts and bonus levels.
@@ -44,5 +45,4 @@ Create a folder called "scripts" inside your GTA2 directory and paste GTA2Radar.
 
 ## Links:
 - [plugin-sdk](https://github.com/DK22Pac/plugin-sdk)
-- [pugixml](https://github.com/zeux/pugixml)
 - [re3](https://github.com/GTAModding/re3)
