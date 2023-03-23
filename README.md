@@ -16,6 +16,32 @@ This is a straight port of the Radar Map from GTA3 to GTA2.
 <img src="https://i.imgur.com/EremRPB.png" width="320" height="180"> 
 </p>
 
+## Compiling:
+Requirements:
+ - Visual Studio 2022
+ - [Plugin SDK](https://github.com/DK22Pac/plugin-sdk)
+
+## Download:
+Download the latest archive from the [releases](https://github.com/gennariarmando/gta2-frontend-fix/releases) page.
+
+# Installation:
+#### Installing an ASI Loader:
+An ASI Loader is required in order to inject the plugin into the game, if you already have one skip to the next step.\
+Recommended: [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader)
+
+Place the DLL file (renamed into "dinput.dll") into your GTA2 directory.
+
+Requires [Widescreen Fix](https://thirteenag.github.io/wfp#gta2)
+
+#### Installing GTA2 Radar:
+Archive content: 
+- GTA2Radar.asi
+- data\hud folder
+- data\radar folder
+
+Paste the content of the "data" folder into your GTA2 "data" directory.\
+Create a folder called "scripts" inside your GTA2 directory and paste GTA2Radar.asi in it.
+
 ## Links:
 - [plugin-sdk](https://github.com/DK22Pac/plugin-sdk)
 - [pugixml](https://github.com/zeux/pugixml)
