@@ -38,6 +38,16 @@
 
 using namespace plugin;
 
+static config_file config(PLUGIN_PATH("GTA2Radar.ini"));
+static int EnableBuiltinArrows = config["EnableBuiltinArrows"].asInt(0);
+static float DynamicArrowsDistance = config["DynamicArrowsDistance"].asFloat(1.0);
+
+enum eEnableBuiltinArrows {
+    DISABLED,
+    ENABLED,
+    DYNAMIC
+};
+
 static int states[D3DRENDERSTATE_RANGEFOGENABLE];
 
 struct tHardCodedBlips {
@@ -476,6 +486,29 @@ public:
             RenderStateSet((D3DRENDERSTATETYPE)i, (void*)states[i]);
     }
 
+    /* Calls from 0x4C82D5 to 0x4C7050 (IsArrowVisible) are redirected here if EnableBuiltinArrows = DYNAMIC
+    *  We can get arrowAddress either from ECX register or top of stack
+    *  Stack needs to be unchanged upon return, but cdecl might reuse stack space if optimization is on
+    *  Using fastcall instead since it takes argument from ECX and doesn't mess with the stack
+    */
+    static int __fastcall HandleDynamicArrows(int arrowAddress) {
+        CHudArrow* arrow = (CHudArrow*)arrowAddress;
+        if (arrow->m_bVisible != 1) {
+            return 0;
+        }
+        else {
+            CVector pos = arrow->m_ArrowTrace.m_vPos.FromInt16();
+            CVector2D in = {};
+            TransformRealWorldPointToRadarSpace(in, { pos.x, pos.y });
+            if (LimitRadarPoint(in) <= DynamicArrowsDistance) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
+
     GTA2Radar() {
         ThiscallEvent <AddressList<0x462028, H_CALL>, PRIORITY_AFTER, ArgPickNone, void(CGame*)> onGameInit;
         onGameInit += []() {
@@ -569,7 +602,13 @@ public:
             RestoreStates();
         };     
 
-        // No arrows
-        plugin::patch::Nop(0x4CA4D2, 11);
+        if (EnableBuiltinArrows == DISABLED)
+        {
+            plugin::patch::Nop(0x4CA4D2, 11);
+        }
+        else if (EnableBuiltinArrows == DYNAMIC) {
+            plugin::patch::ReplaceFunctionCall(0x4C82D5, HandleDynamicArrows);
+        }
+
     };
 } gta2Radar;
